@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# List of servers
+SERVERS=("server1" "server2" "server3" "server4" "server5" "server6")
+
+# Directory to analyze on each server
+TARGET_DIR="/path/to/fileshare"
+
+# Shared directory to store logs
+SHARED_DIR="/path/to/shared/logs"
+
+# Local script path
+LOCAL_SCRIPT_PATH="./fileshare_usage.sh"
+
+# Ensure the shared directory exists
+mkdir -p "$SHARED_DIR"
+
+# Run the script on each server
+for SERVER in "${SERVERS[@]}"; do
+    echo "Running analysis on $SERVER..."
+    ssh "$SERVER" "bash -s" < "$LOCAL_SCRIPT_PATH" "$TARGET_DIR" > "$SHARED_DIR/${SERVER}_fileshare_usage.log"
+    echo "Results for $SERVER logged in $SHARED_DIR/${SERVER}_fileshare_usage.log"
+done
+
+echo "Fileshare usage analysis completed on all servers."
