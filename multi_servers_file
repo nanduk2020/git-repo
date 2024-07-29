@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Check if the directory is provided as an argument
+if [ -z "$1" ]; then
+    echo "Usage: $0 <directory>"
+    exit 1
+fi
+
+DIRECTORY=$1
+
+# Check if the directory exists
+if [ ! -d "$DIRECTORY" ]; then
+    echo "Directory $DIRECTORY does not exist."
+    exit 1
+fi
+
+echo "Analyzing fileshare: $DIRECTORY"
+echo
+
+# Get disk usage summary
+echo "Disk Usage Summary:"
+df -h "$DIRECTORY"
+echo
+
+# Get total size of the directory
+echo "Total Size of $DIRECTORY:"
+du -sh "$DIRECTORY"
+echo
+
+# List top 10 largest files
+echo "Top 10 Largest Files:"
+find "$DIRECTORY" -type f -exec du -h {} + | sort -rh | head -n 10
+echo
+
+# List top 10 largest directories
+echo "Top 10 Largest Directories:"
+du -h "$DIRECTORY"/* | sort -rh | head -n 10
+echo
+
+# Breakdown of file types
+echo "Breakdown of File Types:"
+find "$DIRECTORY" -type f | sed -n 's/..*\.//p' | sort | uniq -c | sort -nr
+echo
+
+echo "Fileshare usage analysis complete."
